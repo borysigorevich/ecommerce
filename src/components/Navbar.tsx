@@ -5,6 +5,7 @@ import {MdKeyboardArrowDown} from 'react-icons/md'
 
 import {AiOutlineSearch, AiFillHeart} from 'react-icons/ai'
 import {BsFillPersonFill, BsFillCartFill} from 'react-icons/bs'
+import {Cart} from "./Cart";
 
 
 export const Navbar = () => {
@@ -56,11 +57,7 @@ export const Navbar = () => {
                         <AiOutlineSearch/>
                         <BsFillPersonFill/>
                         <AiFillHeart/>
-                        <div className='flex items-center relative'>
-                            <BsFillCartFill/>
-                            <span className='absolute -right-[12px] -top-[9px] w-[20px] h-[20px] rounded-full
-                            bg-[#2879fe] -top-[10px] text-white grid place-content-center text-sm'>0</span>
-                        </div>
+                        <Cart/>
                     </div>
                 </div>
             </nav>

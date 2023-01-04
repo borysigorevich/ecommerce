@@ -7,7 +7,8 @@ module.exports = {
     theme: {
         extend: {
             height: {
-                slider: 'calc(100vh - 80px)'
+                slider: 'calc(100vh - 80px)',
+                product: 'calc(100vh - 160px)'
             },
             translate: {
                 0: '0vw',
