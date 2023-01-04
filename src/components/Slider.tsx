@@ -12,14 +12,13 @@ export const Slider = () => {
             "https://images.pexels.com/photos/837140/pexels-photo-837140.jpeg?auto=compress&cs=tinysrgb&w=1600",
         ];
 
-        const previous = () => setCurrentSlide(currentSlide === 0 ? 2 : prev => prev - 1)
-        const next = () => setCurrentSlide(currentSlide === 2 ? 0 : prev => prev + 1)
-
+        const previous = () => setCurrentSlide(currentSlide === 0 ? 200 : prev => prev - 100)
+        const next = () => setCurrentSlide(currentSlide === 200 ? 0 : prev => prev + 100)
 
         return (
-            <div className='relative overflow-hidden'>
+            <div className='relative'>
                 <div
-                    className={`flex relative w-[300%] h-slider -translate-x-[${currentSlide * 100}vw] transition duration-300`}>
+                    className={`will-change-transform flex relative w-[300%] h-slider transition duration-300 -translate-x-${currentSlide}`}>
                     <img className='w-screen object-cover' src={data[0]} alt="picture 1"/>
                     <img className='w-screen object-cover' src={data[1]} alt="picture 2"/>
                     <img className='w-screen object-cover' src={data[2]} alt="picture 3"/>

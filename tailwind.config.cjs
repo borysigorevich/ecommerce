@@ -8,8 +8,18 @@ module.exports = {
         extend: {
             height: {
                 slider: 'calc(100vh - 80px)'
+            },
+            translate: {
+                0: '0vw',
+                100: '100vw',
+                200: '200vw',
             }
         },
     },
+    safelist: [
+        '-translate-x-0',
+        '-translate-x-100',
+        '-translate-x-200',
+    ],
     plugins: [],
 }
