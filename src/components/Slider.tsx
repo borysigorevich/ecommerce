@@ -16,7 +16,7 @@ export const Slider = () => {
         const next = () => setCurrentSlide(currentSlide === 200 ? 0 : prev => prev + 100)
 
         return (
-            <div className='relative'>
+            <div className='relative overflow-hidden'>
                 <div
                     className={`will-change-transform flex relative w-[300%] h-slider transition duration-300 -translate-x-${currentSlide}`}>
                     <img className='w-screen object-cover' src={data[0]} alt="picture 1"/>
