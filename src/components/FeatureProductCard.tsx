@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router-dom'
 
 type FeatureProductType = {
     id: number
@@ -14,7 +15,7 @@ type FeatureProductType = {
 export const FeatureProductCard = (product: FeatureProductType) => {
 
     return (
-        <div>
+        <Link to='/product/1'>
             <div className='relative mb-3 group overflow-hidden'>
                 {product.isNew &&
                     <span className='select-none absolute top-4 left-4 p-1 text-sm bg-white text-teal-600'>New Season</span>}
@@ -33,6 +34,6 @@ export const FeatureProductCard = (product: FeatureProductType) => {
                     <span className='font-bold'>${product.price}</span>
                 </div>
             </div>
-        </div>
+        </Link>
     );
 };

@@ -17,8 +17,6 @@ export const Products = () => {
         } else setFilter(prev => [...prev, event.target.value])
     }
 
-    console.log(filter)
-
     const data = [
         {
             id: 1,
