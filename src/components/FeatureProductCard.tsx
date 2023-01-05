@@ -1,37 +1,54 @@
 import React from 'react';
 import {Link} from 'react-router-dom'
 
-type FeatureProductType = {
-    id: number
-    img: string
-    oldPrice: number
-    price: number
-    title: string
-    isNew?: boolean
-    type: string
+export type FeatureProductType = {
+   attributes: {
+       img: {
+           data: {
+               attributes: {
+                   url: string
+               }
+           }
+       }
+       img2: {
+           data: {
+               attributes: {
+                   url: string
+               }
+           }
+       }
+       oldPrice?: number
+       price: number
+       title: string
+       isNew?: boolean
+       type: string
+   }
+   id: number
 }
-
 
 export const FeatureProductCard = (product: FeatureProductType) => {
 
     return (
         <Link to='/product/1'>
-            <div className='relative mb-3 group overflow-hidden'>
-                {product.isNew &&
-                    <span className='select-none absolute top-4 left-4 p-1 text-sm bg-white text-teal-600'>New Season</span>}
-                <img className='w-full h-[400px] object-cover group-hover:hidden' src={product.img} alt={product.title}/>
+            <div className='relative mb-3 group overflow-hidden max-w-[200px]'>
+                {product.attributes.isNew &&
+                    <span
+                        className='select-none absolute top-4 left-4 p-1 text-sm bg-white text-teal-600'>New Season</span>}
+                <img className='w-full h-[400px] object-cover group-hover:hidden'
+                     src={import.meta.env.VITE_STRAPI_UPLOAD_URL + product.attributes.img?.data.attributes.url}
+                     alt={product.attributes.title}/>
                 <img
                     className='w-full h-[400px] object-cover hidden group-hover:block'
-                    src="https://images.pexels.com/photos/837140/pexels-photo-837140.jpeg?auto=compress&cs=tinysrgb&w=1600"
-                    alt={product.title}
+                    src={import.meta.env.VITE_STRAPI_UPLOAD_URL + product.attributes.img2?.data.attributes.url}
+                    alt={product.attributes.title}
                 />
             </div>
 
             <div>
-                <h2 className='font-semibold '>{product.title}</h2>
+                <h2 className='font-semibold '>{product.attributes.title}</h2>
                 <div className='flex gap-3'>
-                    <span className='text-gray-400 line-through'>${product.oldPrice}</span>
-                    <span className='font-bold'>${product.price}</span>
+                    <span className='text-gray-400 line-through'>${product.attributes.oldPrice}</span>
+                    <span className='font-bold'>${product.attributes.price}</span>
                 </div>
             </div>
         </Link>

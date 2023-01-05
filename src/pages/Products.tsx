@@ -1,21 +1,40 @@
 import React, {ChangeEvent, useState} from 'react';
 import {useParams} from 'react-router-dom'
-import {FeatureProductCard} from "../components";
+import {FeatureProductCard, FeatureProductType} from "../components";
+import {useFetch} from "../hooks";
+
+export type CategoriesType = {
+    attributes: {
+        title: string
+        products: {
+            data: FeatureProductType[]
+        }
+    }
+    id: number
+}
 
 export const Products = () => {
     const id = Number(useParams().id)
 
     const [maxPrice, setMaxPrice] = useState(1000)
     const [sort, setSort] = useState('asc')
-    const [filter, setFilter] = useState<string[]>([])
+    const [filters, setFilters] = useState<string[]>([])
 
     const sortBy = (event: ChangeEvent<HTMLInputElement>) => setSort(event.target.value)
     const filterBy = (event: ChangeEvent<HTMLInputElement>) => {
         const filterValue = event.target.value
-        if (filter.includes(filterValue)) {
-            setFilter(prev => prev.filter(value => value !== filterValue))
-        } else setFilter(prev => [...prev, event.target.value])
+        const isChecked = event.target.checked
+
+        setFilters(isChecked
+            ? [...filters, filterValue]
+            : prev => prev.filter(category => category !== filterValue)
+        )
     }
+
+    const [categories, catLoading, catError] = useFetch(`/sub-categories?populate=*&[filters][categories][id][$eq]=${id}`)
+    const [products, productsLoading, productsError] = useFetch(
+        `/products?populate=*&[filters][categories][id][$eq]=${id}
+        ${filters.map(subCat => `&[filters][sub_categories][id][$eq]=${subCat}`)}&[filter][price][$lth]=${maxPrice}`)
 
     const data = [
         {
@@ -55,27 +74,21 @@ export const Products = () => {
     ]
 
     return (
-        <div className='grid grid-cols-[1fr_4fr] px-16 gap-36 pt-16'>
+        <div className='grid grid-cols-[1fr_4fr] px-16 gap-36 pt-16 h-product'>
 
             <div>
                 <div className='grid mb-6'>
                     <h2 className='text-2xl mb-2'>Product Categories</h2>
-                    <label className='w-fit relative pl-5'>
-                        <input onChange={filterBy} className='appearance-none' type="checkbox" value='hat'/>
-                        <span className='absolute w-4 h-4 border block
+                    {(categories as CategoriesType[]).map(category => (
+                        <label key={category.id} className='w-fit relative pl-5'>
+                            <input onChange={filterBy} className='appearance-none' type="checkbox" value={category.id}/>
+                            <span className='absolute w-4 h-4 border block
                          top-1/2 -translate-y-1/2 left-0 rounded-full grid place-content-center
                          before:w-2 before:h-2 border-[#2879fe] before:rounded-full before:bg-[#2879fe] before:transition-all'
-                        />
-                        <span className='select-none'>hat</span>
-                    </label>
-                    <label className='w-fit relative pl-5'>
-                        <input onChange={filterBy} className='appearance-none' type="checkbox" value='tshirt'/>
-                        <span className='absolute w-4 h-4 border block
-                         top-1/2 -translate-y-1/2 left-0 rounded-full grid place-content-center
-                         before:w-2 before:h-2 border-[#2879fe] before:rounded-full before:bg-[#2879fe] before:transition-all'
-                        />
-                        <span className='select-none'>tshirt</span>
-                    </label>
+                            />
+                            <span className='select-none'>{category.attributes.title}</span>
+                        </label>
+                    ))}
                 </div>
 
                 <div className='mb-6'>
@@ -120,11 +133,12 @@ export const Products = () => {
                 </div>
 
 
-                <div className='flex justify-between gap-10'>
-                    {data.map(product => (
+                <div className='flex gap-10'>
+                    {(products as FeatureProductType[]).map(product => (
                             <FeatureProductCard key={product.id} {...product}/>
                         )
                     )}
+
                 </div>
             </div>
 

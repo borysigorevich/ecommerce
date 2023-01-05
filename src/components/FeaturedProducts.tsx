@@ -1,11 +1,15 @@
-import React from 'react';
-import {FeatureProductCard} from "./FeatureProductCard";
+import React, {useState} from 'react';
+import {FeatureProductCard, FeatureProductType} from "./FeatureProductCard";
+import {useFetch} from "../hooks";
 
 type FeaturedProductsProps = {
     type: 'Featured Products' | 'Trending Products'
 }
 
 export const FeaturedProducts = ({type}: FeaturedProductsProps) => {
+    const [typeOfProduct] = useState(() => type === 'Featured Products' ? 'featured' : 'trending')
+
+    const [products, loading, error] = useFetch(`/products?populate=*&[filters][type][$eq]=${typeOfProduct}`)
 
     const data = [
         {
@@ -55,7 +59,7 @@ export const FeaturedProducts = ({type}: FeaturedProductsProps) => {
             </div>
 
             <div className='flex justify-center gap-10 px-32'>
-                {data.map(product => (
+                {(products as FeatureProductType[]).map((product) => (
                         <FeatureProductCard key={product.id} {...product}/>
                     )
                 )}

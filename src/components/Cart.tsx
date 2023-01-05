@@ -5,21 +5,45 @@ import {BsFillCartFill} from "react-icons/bs";
 import {AiFillCloseCircle} from 'react-icons/ai'
 import {CartItem} from "./CartItem";
 
+type Numbers = number[]
+
 export const Cart = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
 
+    const asc = (left: Numbers = [], right: Numbers = []): Numbers => {
+        let sortedArr = []
+
+        while (left.length && right.length) {
+            if (left[0] < right[0]) sortedArr.push(left.shift() as number)
+            else sortedArr.push(right.shift() as number)
+        }
+
+        return [...sortedArr, ...left, ...right].filter(Boolean)
+    }
+
+    const merge = (arr: Numbers): Numbers => {
+        if (arr.length < 2) return arr
+
+        const mid = Math.floor(arr.length / 2)
+
+        const left = arr.slice(0, mid)
+        const right = arr.slice(mid)
+
+        return asc(merge(left), merge(right))
+    }
+    console.log([...[]])
+    console.log(merge([5, 4, 3, 2, 1]))
+
     const openMenu = () => setIsMenuOpen(true)
-    const closeMenu = (event: MouseEvent) => setIsMenuOpen(false)
+    const closeMenu = () => setIsMenuOpen(false)
 
     useEffect(() => {
 
-        const listener = (event: KeyboardEvent) => {
-            if (event.key === 'Escape' && isMenuOpen) setIsMenuOpen(false)
-        }
+        const listener = (event: KeyboardEvent) => event.key === 'Escape' && isMenuOpen && setIsMenuOpen(false)
 
-        window.addEventListener('keydown', listener)
+        window.addEventListener('keydown', listener, false)
 
-        return () => window.removeEventListener('keydown', listener)
+        return () => window.removeEventListener('keydown', listener, false)
 
     }, [isMenuOpen])
 
