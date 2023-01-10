@@ -5,7 +5,7 @@ import {Footer} from "./Footer";
 
 export const Layout = () => {
     return (
-        <div className="h-full grid grid-rows-[auto_1fr_auto]">
+        <div className="min-h-full grid grid-rows-[auto_1fr_auto]">
             <Navbar/>
             <Outlet/>
             <Footer/>

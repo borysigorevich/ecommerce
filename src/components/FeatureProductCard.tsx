@@ -22,6 +22,7 @@ export type FeatureProductType = {
        title: string
        isNew?: boolean
        type: string
+       desc: string
    }
    id: number
 }
@@ -29,7 +30,7 @@ export type FeatureProductType = {
 export const FeatureProductCard = (product: FeatureProductType) => {
 
     return (
-        <Link to='/product/1'>
+        <Link to={`/product/${product.id}`}>
             <div className='relative mb-3 group overflow-hidden max-w-[200px]'>
                 {product.attributes.isNew &&
                     <span

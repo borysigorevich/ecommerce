@@ -4,7 +4,7 @@ import {makeRequest} from "../makeRequest";
 import {CategoriesType} from "../pages";
 
 export const useFetch = (url: string) => {
-    const [data, setData] = useState<FeatureProductType[] | CategoriesType[]>([])
+    const [data, setData] = useState<FeatureProductType | FeatureProductType[] | CategoriesType[]>([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
 

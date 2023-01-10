@@ -4,9 +4,8 @@ import {Link} from 'react-router-dom'
 import {MdKeyboardArrowDown} from 'react-icons/md'
 
 import {AiOutlineSearch, AiFillHeart} from 'react-icons/ai'
-import {BsFillPersonFill, BsFillCartFill} from 'react-icons/bs'
+import {BsFillPersonFill} from 'react-icons/bs'
 import {Cart} from "./Cart";
-
 
 export const Navbar = () => {
     return (

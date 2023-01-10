@@ -1,7 +1,8 @@
-import React, {ChangeEvent, useState} from 'react';
+import React, {useState, useEffect} from 'react';
+import type {ChangeEvent} from 'react'
 import {useParams} from 'react-router-dom'
 import {FeatureProductCard, FeatureProductType} from "../components";
-import {useFetch} from "../hooks";
+import {useDebounce, useFetch} from "../hooks";
 
 export type CategoriesType = {
     attributes: {
@@ -17,6 +18,7 @@ export const Products = () => {
     const id = Number(useParams().id)
 
     const [maxPrice, setMaxPrice] = useState(1000)
+    const [maxPriceDebounce, setMaxPriceDebounce] = useState(1000)
     const [sort, setSort] = useState('asc')
     const [filters, setFilters] = useState<string[]>([])
 
@@ -31,10 +33,22 @@ export const Products = () => {
         )
     }
 
+    useDebounce(() => {
+        setMaxPriceDebounce(maxPrice)
+    }, [maxPrice], 500)
+
+    const changePrice = (event: ChangeEvent<HTMLInputElement>) => {
+        setMaxPrice(Number(event.target.value))
+    }
+
     const [categories, catLoading, catError] = useFetch(`/sub-categories?populate=*&[filters][categories][id][$eq]=${id}`)
     const [products, productsLoading, productsError] = useFetch(
         `/products?populate=*&[filters][categories][id][$eq]=${id}
-        ${filters.map(subCat => `&[filters][sub_categories][id][$eq]=${subCat}`)}&[filter][price][$lth]=${maxPrice}`)
+        ${filters.map(subCat => `&[filters][sub_categories][id][$eq]=${subCat}`)}&[filters][price][$lte]=${maxPriceDebounce}&sort[0]=price:${sort}`)
+
+    useEffect(() => {
+        window.scrollTo(0, 0)
+    }, [])
 
     const data = [
         {
@@ -74,7 +88,7 @@ export const Products = () => {
     ]
 
     return (
-        <div className='grid grid-cols-[1fr_4fr] px-16 gap-36 pt-16 h-product'>
+        <div className='grid grid-cols-[1fr_4fr] px-16 gap-36 pt-16 min-h-[calc(100vh-160px)]'>
 
             <div>
                 <div className='grid mb-6'>
@@ -99,7 +113,7 @@ export const Products = () => {
                             type="range"
                             min={0}
                             max={1000}
-                            onChange={(event) => setMaxPrice(Number(event.target.value))}
+                            onChange={changePrice}
                             value={maxPrice}
                         />
                         <span className='text-sm font-semibold'>{maxPrice}</span>
@@ -111,7 +125,7 @@ export const Products = () => {
 
                     <div className='grid gap-2'>
                         <label className='flex gap-2'>
-                            <input type="radio" name='sort' value='asc' onChange={sortBy}/>
+                            <input type="radio" name='sort' defaultChecked value='asc' onChange={sortBy}/>
                             <span>Lowest Price</span>
                         </label>
                         <label className='flex gap-2'>
@@ -134,7 +148,7 @@ export const Products = () => {
 
 
                 <div className='flex gap-10'>
-                    {(products as FeatureProductType[]).map(product => (
+                    {(products as FeatureProductType[])?.map(product => (
                             <FeatureProductCard key={product.id} {...product}/>
                         )
                     )}
